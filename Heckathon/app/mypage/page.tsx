@@ -137,14 +137,14 @@ function MyPageContent() {
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
               <Avatar className="w-24 h-24">
-                <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
-                <AvatarFallback className="text-2xl">{user.name[0]}</AvatarFallback>
+                <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.nickname} />
+                <AvatarFallback className="text-2xl">{user?.nickname?.[0] || ""}</AvatarFallback>
               </Avatar>
 
               <div className="flex-1">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{user.name}님</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{user.nickname}님</h1>
                     <p className="text-gray-600 mb-2">{user.email}</p>
                     <div className="flex items-center text-sm text-gray-500">
                       <MapPin className="w-4 h-4 mr-1" />

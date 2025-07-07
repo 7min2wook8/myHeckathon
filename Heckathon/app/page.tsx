@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -125,21 +125,48 @@ const regions = [
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [selectedRegion, setSelectedRegion] = useState("전체")
+  
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setCurrentSlide((prev) => (prev + 1) % heroPosters.length)
+  //   }, 5000)
+  //   return () => clearInterval(timer)
+  // }, [])
 
-  useEffect(() => {
-    const timer = setInterval(() => {
+  // const nextSlide = () => {
+  //   setCurrentSlide((prev) => (prev + 1) % heroPosters.length)
+  // }
+
+  // const prevSlide = () => {
+  //   setCurrentSlide((prev) => (prev - 1 + heroPosters.length) % heroPosters.length)
+  // }
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+  // 타이머를 시작하는 함수
+  const startTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroPosters.length)
     }, 5000)
-    return () => clearInterval(timer)
+  }
+
+  useEffect(() => {
+    startTimer()
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
   }, [])
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % heroPosters.length)
+    startTimer() // 타이머 초기화
   }
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + heroPosters.length) % heroPosters.length)
+    startTimer() // 타이머 초기화
   }
+
 
   const filteredContests =
     selectedRegion === "전체" ? contests : contests.filter((contest) => contest.location === selectedRegion)

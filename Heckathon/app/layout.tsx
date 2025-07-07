@@ -7,7 +7,7 @@ import { AuthProvider } from "@/contexts/auth-context"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "소나니 - 공모전 플랫폼",
+  title: "이퀄로컬 - 공모전 플랫폼",
   description: "공모전과 팀 매칭을 통해 여러분의 꿈을 실현해보세요",
     generator: 'v0.dev'
 }

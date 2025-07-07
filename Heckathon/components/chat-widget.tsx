@@ -9,7 +9,7 @@ import { MessageCircle, X, Send } from "lucide-react"
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([
-    { id: 1, text: "안녕하세요! 소나니 AI 어시스턴트입니다. 어떤 도움이 필요하신가요?", isBot: true },
+    { id: 1, text: "안녕하세요! 이퀄로컬 AI 어시스턴트입니다. 어떤 도움이 필요하신가요?", isBot: true },
   ])
   const [inputValue, setInputValue] = useState("")
 

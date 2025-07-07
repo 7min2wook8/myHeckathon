@@ -56,7 +56,7 @@ const availableSkills = [
 function ProfileEditContent() {
   const { user, updateUser } = useAuth()
   const [profile, setProfile] = useState({
-    name: "",
+    nickname: "",
     email: "",
     phone: "",
     location: "",
@@ -77,7 +77,7 @@ function ProfileEditContent() {
   useEffect(() => {
     if (user) {
       setProfile({
-        name: user.name || "",
+        nickname: user.nickname || "",
         email: user.email || "",
         phone: "",
         location: user.location || "",
@@ -102,7 +102,7 @@ function ProfileEditContent() {
 
       // 사용자 정보 업데이트
       updateUser({
-        name: profile.name,
+        nickname: profile.nickname,
         location: profile.location,
         interests: profile.interests,
         skills: profile.skills,
@@ -157,34 +157,22 @@ function ProfileEditContent() {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8">        
         {/* 헤더 */}
         <div className="flex items-center justify-between mb-8">
+          <Link href="/mypage">
+            <Button variant="outline" size="sm">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              돌아가기
+            </Button>
+          </Link>
+
           <div className="flex items-center gap-4">
-            <Link href="/mypage">
-              <Button variant="outline" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                돌아가기
-              </Button>
-            </Link>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">프로필 수정</h1>
               <p className="text-gray-600">개인 정보와 관심사를 업데이트하세요</p>
             </div>
           </div>
-          <Button onClick={handleSave} disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                저장 중...
-              </>
-            ) : (
-              <>
-                <Save className="w-4 h-4 mr-2" />
-                저장하기
-              </>
-            )}
-          </Button>
         </div>
 
         {/* 성공 메시지 */}
@@ -204,8 +192,8 @@ function ProfileEditContent() {
               </CardHeader>
               <CardContent className="text-center space-y-4">
                 <Avatar className="w-32 h-32 mx-auto">
-                  <AvatarImage src={user.avatar || "/placeholder.svg"} alt={profile.name} />
-                  <AvatarFallback className="text-4xl">{profile.name[0] || "U"}</AvatarFallback>
+                  <AvatarImage src={user.avatar || "/placeholder.svg"} alt={profile.nickname} />
+                  <AvatarFallback className="text-4xl">{profile.nickname[0] || "U"}</AvatarFallback>
                 </Avatar>
                 <Button variant="outline" className="w-full bg-transparent" disabled>
                   <Upload className="w-4 h-4 mr-2" />
@@ -229,8 +217,8 @@ function ProfileEditContent() {
                     <Label htmlFor="name">이름</Label>
                     <Input
                       id="name"
-                      value={profile.name}
-                      onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                      value={profile.nickname}
+                      onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2">
@@ -425,8 +413,25 @@ function ProfileEditContent() {
             </Card>
           </div>
         </div>
+        {/* 저장 버튼 */}
+        <div className="mt-8 flex justify-end">
+        <Button onClick={handleSave} disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                저장 중...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4 mr-2" />
+                저장하기
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
+      {/* 푸터 */}
       <Footer />
     </div>
   )

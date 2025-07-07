@@ -40,13 +40,18 @@ export default function LoginPage() {
     setIsSubmitting(true)
 
     try {
-      const result = await login(formData.email, formData.password)
+       
+        // 로그인 성공 시 auth-context의 login 함수 호출
+        // 이 함수는 세션을 저장하고 사용자 정보를 업데이트합니다.
+        const result = await login(formData.email, formData.password)
+        // 로그인 성공 시 홈으로 이동
+        if (result.success) {
+          router.push("/")
+        } else {
+          setError(result.message)
+        }
 
-      if (result.success) {
-        router.push("/")
-      } else {
-        setError(result.message)
-      }
+       console.log("로그인 시도:", formData)
     } catch (error) {
       setError("로그인 중 오류가 발생했습니다.")
     } finally {
@@ -55,12 +60,12 @@ export default function LoginPage() {
   }
 
   // 데모용 계정 정보 자동 입력
-  const fillDemoAccount = () => {
-    setFormData({
-      email: "minwook@example.com",
-      password: "password123",
-    })
-  }
+  // const fillDemoAccount = () => {
+  //   setFormData({
+  //     email: "minwook@example.com",
+  //     password: "password123",
+  //   })
+  // }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -71,11 +76,11 @@ export default function LoginPage() {
           <Card>
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bold">로그인</CardTitle>
-              <p className="text-gray-600">소나니에 오신 것을 환영합니다</p>
+              <p className="text-gray-600">이퀄로컬에 오신 것을 환영합니다</p>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* 데모 계정 안내 */}
-              <div className="bg-blue-50 p-4 rounded-lg">
+              {/* <div className="bg-blue-50 p-4 rounded-lg">
                 <h4 className="font-medium text-blue-900 mb-2">데모 계정으로 체험해보세요!</h4>
                 <p className="text-sm text-blue-700 mb-3">
                   이메일: minwook@example.com
@@ -91,7 +96,7 @@ export default function LoginPage() {
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
-              )}
+              )} */}
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -152,7 +157,7 @@ export default function LoginPage() {
               <div className="text-center space-y-2">
                 <p className="text-sm text-gray-600">
                   계정이 없으신가요?{" "}
-                  <Link href="/signup" className="text-blue-600 hover:underline">
+                  <Link href="/signup/terms" className="text-blue-600 hover:underline">
                     회원가입
                   </Link>
                 </p>

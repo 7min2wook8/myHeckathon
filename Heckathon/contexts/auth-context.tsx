@@ -3,8 +3,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 
 interface User {
-  id: string
-  name: string
+  //id: string
+  nickname: string
   email: string
   avatar?: string
   location?: string
@@ -24,28 +24,29 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 // 더미 사용자 데이터
-const DUMMY_USERS = [
-  {
-    id: "1",
-    name: "민욱",
-    email: "minwook@example.com",
-    password: "password123",
-    avatar: "/placeholder.svg?height=100&width=100",
-    location: "서울",
-    interests: ["창업", "IT", "디자인"],
-    skills: ["React", "Node.js", "Python", "UI/UX"],
-  },
-  {
-    id: "2",
-    name: "김철수",
-    email: "chulsoo@example.com",
-    password: "password123",
-    avatar: "/placeholder.svg?height=100&width=100",
-    location: "부산",
-    interests: ["IT", "마케팅"],
-    skills: ["Java", "Spring", "MySQL"],
-  },
-]
+// const DUMMY_USERS = [
+//   {
+//     id: "1",
+//     name: "민욱",
+//     email: "minwook@example.com",
+//     password: "password123",
+//     avatar: "/placeholder.svg?height=100&width=100",
+//     location: "서울",
+//     interests: ["창업", "IT", "디자인"],
+//     skills: ["React", "Node.js", "Python", "UI/UX"],
+//   },
+//   {
+//     id: "2",
+//     name: "김철수",
+//     email: "chulsoo@example.com",
+//     password: "password123",
+//     avatar: "/placeholder.svg?height=100&width=100",
+//     location: "부산",
+//     interests: ["IT", "마케팅"],
+//     skills: ["Java", "Spring", "MySQL"],
+//   },
+// ]
+const API_BASE_URL = 'http://localhost:8080/api';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -55,8 +56,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const checkSession = () => {
       try {
-        const savedUser = localStorage.getItem("sonani_user")
-        const sessionExpiry = localStorage.getItem("sonani_session_expiry")
+        const savedUser = localStorage.getItem("EqualLocal_user")
+        const sessionExpiry = localStorage.getItem("EqualLocal_session_expiry")
 
         if (savedUser && sessionExpiry) {
           const expiryTime = Number.parseInt(sessionExpiry)
@@ -67,14 +68,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setUser(JSON.parse(savedUser))
           } else {
             // 세션이 만료된 경우
-            localStorage.removeItem("sonani_user")
-            localStorage.removeItem("sonani_session_expiry")
+            localStorage.removeItem("EqualLocal_user")
+            localStorage.removeItem("EqualLocal_session_expiry")
           }
         }
       } catch (error) {
         console.error("세션 확인 중 오류:", error)
-        localStorage.removeItem("sonani_user")
-        localStorage.removeItem("sonani_session_expiry")
+        localStorage.removeItem("EqualLocal_user")
+        localStorage.removeItem("EqualLocal_session_expiry")
       } finally {
         setIsLoading(false)
       }
@@ -86,7 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // 자동 로그아웃 타이머 설정
   useEffect(() => {
     if (user) {
-      const sessionExpiry = localStorage.getItem("sonani_session_expiry")
+      const sessionExpiry = localStorage.getItem("EqualLocal_session_expiry")
       if (sessionExpiry) {
         const expiryTime = Number.parseInt(sessionExpiry)
         const currentTime = Date.now()
@@ -108,26 +109,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true)
 
     // 실제 API 호출 시뮬레이션
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    //await new Promise((resolve) => setTimeout(resolve, 1000))
 
     try {
-      const foundUser = DUMMY_USERS.find((u) => u.email === email && u.password === password)
+      //const foundUser = DUMMY_USERS.find((u) => u.email === email && u.password === password)
+      const response = await fetch(`${API_BASE_URL}/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        credentials: "include", // 세션 쿠키를 받으려면 필요
+      })
+      //const data = await response.json()
 
-      if (foundUser) {
-        const { password: _, ...userWithoutPassword } = foundUser
+      if (response.ok) {
+        // 로그인 성공 시 사용자 정보 받아오기 (예: /users/me)
+        const meRes = await fetch(`${API_BASE_URL}/users/me`, {
+          credentials: "include",
+        })
+        if (!meRes.ok) {
+          setIsLoading(false)
+          return { success: false, message: "사용자 정보를 불러오지 못했습니다." }
+        }
+        const userData = await meRes.json()
         const sessionExpiry = Date.now() + 24 * 60 * 60 * 1000 // 24시간
 
         // 로컬 스토리지에 사용자 정보와 세션 만료 시간 저장
-        localStorage.setItem("sonani_user", JSON.stringify(userWithoutPassword))
-        localStorage.setItem("sonani_session_expiry", sessionExpiry.toString())
+        localStorage.setItem("EqualLocal_user", JSON.stringify(userData))
+        localStorage.setItem("EqualLocal_session_expiry", sessionExpiry.toString())
 
-        setUser(userWithoutPassword)
+        setUser(userData)
         setIsLoading(false)
 
         return { success: true, message: "로그인에 성공했습니다." }
       } else {
+        const msg = await response.text()
         setIsLoading(false)
-        return { success: false, message: "이메일 또는 비밀번호가 올바르지 않습니다." }
+        return { success: false, message: msg || "이메일 또는 비밀번호가 올바르지 않습니다." }
       }
     } catch (error) {
       setIsLoading(false)
@@ -137,15 +154,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem("sonani_user")
-    localStorage.removeItem("sonani_session_expiry")
+    localStorage.removeItem("EqualLocal_user")
+    localStorage.removeItem("EqualLocal_session_expiry")
   }
 
   const updateUser = (userData: Partial<User>) => {
     if (user) {
       const updatedUser = { ...user, ...userData }
       setUser(updatedUser)
-      localStorage.setItem("sonani_user", JSON.stringify(updatedUser))
+      localStorage.setItem("EqualLocal_user", JSON.stringify(updatedUser))
     }
   }
 

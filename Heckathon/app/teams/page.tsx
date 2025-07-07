@@ -202,7 +202,7 @@ export default function TeamsPage() {
                 팀 만들기
               </Button>
             </Link>
-            <Link href="/teams/profile">
+            <Link href="/mypage/profile">
               <Button variant="outline">
                 <UserPlus className="w-4 h-4 mr-2" />
                 프로필 등록
@@ -497,7 +497,7 @@ export default function TeamsPage() {
                 <UserPlus className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500 text-lg">조건에 맞는 팀원이 없습니다.</p>
                 <p className="text-gray-400 mt-2">다른 조건으로 검색해보거나 프로필을 등록해보세요.</p>
-                <Link href="/teams/profile">
+                <Link href="/mypage/profile">
                   <Button className="mt-4">
                     <UserPlus className="w-4 h-4 mr-2" />
                     프로필 등록
