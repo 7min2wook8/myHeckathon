@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -10,17 +9,6 @@ import Header from "@/components/header"
 import Footer from "@/components/footer"
 
 export default function SignupCompletePage() {
-  const router = useRouter()
-
-  useEffect(() => {
-    // 5초 후 자동으로 로그인 페이지로 이동
-    const timer = setTimeout(() => {
-      router.push("/login")
-    }, 5000)
-
-    return () => clearTimeout(timer)
-  }, [router])
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -90,7 +78,6 @@ export default function SignupCompletePage() {
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </Link>
-                <p className="text-sm text-gray-500">5초 후 자동으로 로그인 페이지로 이동합니다</p>
               </div>
             </CardContent>
           </Card>

@@ -69,9 +69,6 @@ export default function SignupPage() {
       // 실제 API 호출 시뮬레이션
       await new Promise((resolve) => setTimeout(resolve, 2000))
 
-      // 회원가입 로직 구현
-      console.log("회원가입 시도:", { ...formData, agreements })
-
           const response = await fetch("http://localhost:8080/api/users/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -84,14 +81,13 @@ export default function SignupPage() {
             }),
             credentials: "include", // 세션 쿠키를 받으려면 필요
           })
-
+          
       if (!response.ok) {
         const errorData = await response.json()
         setError(errorData.message || "회원가입에 실패했습니다. 다시 시도해주세요.")
         return
       }
-      const data = await response.json()
-      console.log("회원가입 성공:", data)
+
       // 회원가입 성공 후 사용자 정보 저장
       // 성공 시 완료 페이지로 이동
       localStorage.removeItem("signup_agreements") // 임시 저장된 약관 동의 정보 삭제
