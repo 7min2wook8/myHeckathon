@@ -124,22 +124,8 @@ const regions = [
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [selectedRegion, setSelectedRegion] = useState("전체")
-  
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setCurrentSlide((prev) => (prev + 1) % heroPosters.length)
-  //   }, 5000)
-  //   return () => clearInterval(timer)
-  // }, [])
-
-  // const nextSlide = () => {
-  //   setCurrentSlide((prev) => (prev + 1) % heroPosters.length)
-  // }
-
-  // const prevSlide = () => {
-  //   setCurrentSlide((prev) => (prev - 1 + heroPosters.length) % heroPosters.length)
-  // }
+  const [selectedRegion, setSelectedRegion] = useState("전체")  
+ 
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   // 타이머를 시작하는 함수
@@ -360,7 +346,6 @@ export default function HomePage() {
           </Card>
         </section>
       </div>
-
       <ChatWidget />
       <Footer />
     </div>

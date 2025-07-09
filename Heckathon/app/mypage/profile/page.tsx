@@ -10,63 +10,81 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { X, Plus, Upload, Save, ArrowLeft, CheckCircle } from "lucide-react"
+import { X, Plus, Upload, Save, ArrowLeft, CheckCircle, User } from "lucide-react"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import ProtectedRoute from "@/components/protected-route"
 import { useAuth } from "@/contexts/auth-context"
 import Link from "next/link"
 
-const availableInterests = [
-  "창업",
-  "IT",
-  "디자인",
-  "마케팅",
-  "광고",
-  "사회",
-  "환경",
-  "교육",
-  "문화",
-  "예술",
-  "스포츠",
-  "의료",
-  "금융",
-  "정책",
-]
+// const availableInterests = [
+//   "창업",
+//   "IT",
+//   "디자인",
+//   "마케팅",
+//   "광고",
+//   "사회",
+//   "환경",
+//   "교육",
+//   "문화",
+//   "예술",
+//   "스포츠",
+//   "의료",
+//   "금융",
+//   "정책",
+// ]
 
-const availableSkills = [
-  "React",
-  "Vue.js",
-  "Angular",
-  "Node.js",
-  "Python",
-  "Java",
-  "JavaScript",
-  "TypeScript",
-  "UI/UX",
-  "Figma",
-  "Photoshop",
-  "Illustrator",
-  "Marketing",
-  "SEO",
-  "Data Analysis",
-  "Machine Learning",
-]
+// const availableSkills = [
+//   "React",
+//   "Vue.js",
+//   "Angular",
+//   "Node.js",
+//   "Python",
+//   "Java",
+//   "JavaScript",
+//   "TypeScript",
+//   "UI/UX",
+//   "Figma",
+//   "Photoshop",
+//   "Illustrator",
+//   "Marketing",
+//   "SEO",
+//   "Data Analysis",
+//   "Machine Learning",
+// ]
+
+      /*
+        this.user_id = user_id;
+        this.full_name = full_name;
+        this.bio = bio;
+        this.profile_image_url = profile_image_url;
+        this.education = education;
+        this.experience = experience;
+        this.portfolio_url = portfolio_url;       
+        */
 
 function ProfileEditContent() {
+
+  const { getProfile, isAuthenticated } = useAuth()
   const { user, updateUser } = useAuth()
   const [profile, setProfile] = useState({
-    nickname: "",
-    email: "",
-    phone: "",
-    location: "",
+    user_id : "",
+    full_name: "",
     bio: "",
-    interests: [] as string[],
-    skills: [] as string[],
+    profile_image_url: "",
     education: "",
     experience: "",
-    portfolio: "",
-    github: "",
+    portfolio_url: "",
+
+    // nickname: "",
+    // email: "",
+    // phone: "",
+    // location: "",
+
+    // interests: [] as string[],
+    // skills: [] as string[],
+    //portfolio: "",
+    //github: "",
   })
   const [newInterest, setNewInterest] = useState("")
   const [newSkill, setNewSkill] = useState("")
@@ -77,17 +95,24 @@ function ProfileEditContent() {
   useEffect(() => {
     if (user) {
       setProfile({
-        nickname: user.nickname || "",
-        email: user.email || "",
-        phone: "",
-        location: user.location || "",
+        //nickname: user.nickname || "",
+        //email: user.email || "",
+        //phone: "",
+        //location: user.location || "",
+        //bio: "",
+        //interests: user.interests || [],
+        //skills: user.skills || [],
+        //education: "",
+        //experience: "",
+        //portfolio: "",
+        //github: "",
+        user_id: user.user_id || "",
+        full_name: "",
         bio: "",
-        interests: user.interests || [],
-        skills: user.skills || [],
+        profile_image_url: "",
         education: "",
         experience: "",
-        portfolio: "",
-        github: "",
+        portfolio_url : "",
       })
     }
   }, [user])
@@ -97,16 +122,34 @@ function ProfileEditContent() {
     setSuccess(false)
 
     try {
+
+      // 실제 API 호출 시뮬레이션      
+      const result = await getProfile()      
+
+      if (result) {
+        setProfile(
+          {
+            user_id: result.user_id,
+            full_name: result.full_name || "",
+            bio: result.bio || "",
+            profile_image_url: result.profile_image_url || "",
+            education: result.education || "",
+            experience: result.experience || "",
+            portfolio_url: result.portfolio_url || "",
+          } as any // 타입 캐스팅
+        )
+      } else {
+        console.error("프로필 정보를 가져오는 데 실패했습니다.")
+        return
+      }
+
       // 실제 API 호출 시뮬레이션
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      // 사용자 정보 업데이트
-      updateUser({
-        nickname: profile.nickname,
-        location: profile.location,
-        interests: profile.interests,
-        skills: profile.skills,
-      })
+      // 프로필 업데이트
+      await updateUser(profile)
+      // setProfile(result) // API 호출 결과로 프로필 업데이트
+      console.log("프로필 업데이트 성공:", profile)
 
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
@@ -117,39 +160,39 @@ function ProfileEditContent() {
     }
   }
 
-  const addInterest = (interest: string) => {
-    if (interest && !profile.interests.includes(interest)) {
-      setProfile({
-        ...profile,
-        interests: [...profile.interests, interest],
-      })
-    }
-    setNewInterest("")
-  }
+  // const addInterest = (interest: string) => {
+  //   if (interest && !profile.interests.includes(interest)) {
+  //     setProfile({
+  //       ...profile,
+  //       interests: [...profile.interests, interest],
+  //     })
+  //   }
+  //   setNewInterest("")
+  // }
 
-  const removeInterest = (interest: string) => {
-    setProfile({
-      ...profile,
-      interests: profile.interests.filter((i) => i !== interest),
-    })
-  }
+  // const removeInterest = (interest: string) => {
+  //   setProfile({
+  //     ...profile,
+  //     interests: profile.interests.filter((i) => i !== interest),
+  //   })
+  // }
 
-  const addSkill = (skill: string) => {
-    if (skill && !profile.skills.includes(skill)) {
-      setProfile({
-        ...profile,
-        skills: [...profile.skills, skill],
-      })
-    }
-    setNewSkill("")
-  }
+  // const addSkill = (skill: string) => {
+  //   if (skill && !profile.skills.includes(skill)) {
+  //     setProfile({
+  //       ...profile,
+  //       skills: [...profile.skills, skill],
+  //     })
+  //   }
+  //   setNewSkill("")
+  // }
 
-  const removeSkill = (skill: string) => {
-    setProfile({
-      ...profile,
-      skills: profile.skills.filter((s) => s !== skill),
-    })
-  }
+  // const removeSkill = (skill: string) => {
+  //   setProfile({
+  //     ...profile,
+  //     skills: profile.skills.filter((s) => s !== skill),
+  //   })
+  // }
 
   if (!user) return null
 
@@ -192,8 +235,8 @@ function ProfileEditContent() {
               </CardHeader>
               <CardContent className="text-center space-y-4">
                 <Avatar className="w-32 h-32 mx-auto">
-                  <AvatarImage src={user.avatar || "/placeholder.svg"} alt={profile.nickname} />
-                  <AvatarFallback className="text-4xl">{profile.nickname[0] || "U"}</AvatarFallback>
+                  <AvatarImage src={profile.profile_image_url || "/placeholder.svg"} alt={profile.full_name} />
+                  <AvatarFallback className="text-4xl">{profile.full_name[0] || "U"}</AvatarFallback>
                 </Avatar>
                 <Button variant="outline" className="w-full bg-transparent" disabled>
                   <Upload className="w-4 h-4 mr-2" />
@@ -217,8 +260,8 @@ function ProfileEditContent() {
                     <Label htmlFor="name">이름</Label>
                     <Input
                       id="name"
-                      value={profile.nickname}
-                      onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
+                      value={profile.full_name}
+                      onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2">
@@ -226,8 +269,8 @@ function ProfileEditContent() {
                     <Input
                       id="email"
                       type="email"
-                      value={profile.email}
-                      onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                      value={user.email}
+                      onChange={(e) => updateUser({ ...profile, email: e.target.value })}
                       disabled
                       className="bg-gray-50"
                     />
@@ -237,16 +280,16 @@ function ProfileEditContent() {
                     <Label htmlFor="phone">전화번호</Label>
                     <Input
                       id="phone"
-                      value={profile.phone}
-                      onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                      value={user.phone_number}
+                      onChange={(e) => updateUser({ ...profile, phone_number: e.target.value })}
                       placeholder="010-0000-0000"
                     />
                   </div>
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <Label htmlFor="location">지역</Label>
                     <Select
                       value={profile.location}
-                      onValueChange={(value) => setProfile({ ...profile, location: value })}
+                      onValueChange={(value) => updateUser({ ...profile, location: value })}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="지역을 선택하세요" />
@@ -271,7 +314,7 @@ function ProfileEditContent() {
                         <SelectItem value="제주">제주</SelectItem>
                       </SelectContent>
                     </Select>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="bio">자기소개</Label>
@@ -287,7 +330,7 @@ function ProfileEditContent() {
             </Card>
 
             {/* 관심 분야 */}
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle>관심 분야</CardTitle>
               </CardHeader>
@@ -325,10 +368,10 @@ function ProfileEditContent() {
                   </Button>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
 
             {/* 기술 스택 */}
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle>기술 스택</CardTitle>
               </CardHeader>
@@ -363,7 +406,7 @@ function ProfileEditContent() {
                   </Button>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
 
             {/* 추가 정보 */}
             <Card>
@@ -394,12 +437,12 @@ function ProfileEditContent() {
                     <Label htmlFor="portfolio">포트폴리오 URL</Label>
                     <Input
                       id="portfolio"
-                      value={profile.portfolio}
-                      onChange={(e) => setProfile({ ...profile, portfolio: e.target.value })}
+                      value={profile.portfolio_url}
+                      onChange={(e) => setProfile({ ...profile, portfolio_url: e.target.value })}
                       placeholder="https://portfolio.example.com"
                     />
                   </div>
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <Label htmlFor="github">GitHub URL</Label>
                     <Input
                       id="github"
@@ -407,7 +450,7 @@ function ProfileEditContent() {
                       onChange={(e) => setProfile({ ...profile, github: e.target.value })}
                       placeholder="https://github.com/username"
                     />
-                  </div>
+                  </div> */}
                 </div>
               </CardContent>
             </Card>

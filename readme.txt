@@ -21,7 +21,7 @@ docker - pgadmin 접속 방법
 
 4. Connection
 	- host name/address : contestapp-postgres
-	- Maintenance : contestapp-postgres
+	- Maintenance : contestapp
 	- Username : user
 	- Password : a1234
 5. 접속

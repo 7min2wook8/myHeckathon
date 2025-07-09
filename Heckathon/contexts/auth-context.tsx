@@ -2,27 +2,6 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 
-interface User {
-  //id: string
-  nickname: string
-  email: string
-  avatar?: string
-  location?: string
-  interests?: string[]
-  skills?: string[]
-}
-
-interface AuthContextType {
-  user: User | null
-  isLoading: boolean
-  isAuthenticated: boolean
-  login: (email: string, password: string) => Promise<{ success: boolean; message: string }>
-  logout: () => void
-  updateUser: (userData: Partial<User>) => void
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
-
 // 더미 사용자 데이터
 // const DUMMY_USERS = [
 //   {
@@ -46,6 +25,51 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 //     skills: ["Java", "Spring", "MySQL"],
 //   },
 // ]
+
+
+interface User {
+  user_id: string
+  username: string
+  email: string
+  phone_number?: string
+  //avatar?: string
+  //location?: string
+  //interests?: string[]
+  //skills?: string[]
+}
+
+interface Profile {
+
+    user_id : ""
+    full_name?: ""
+    bio?: ""
+    profile_image_url?: ""
+    education?: ""
+    experience?: ""
+    portfolio_url?: ""
+  // user_id: string
+  // username: string
+  // email: string
+  // phone_number?: string
+  // avatar?: string
+  // location?: string
+  // interests?: string[]
+  // skills?: string[]
+}
+
+interface AuthContextType {
+  user: User | null
+  isLoading: boolean
+  isAuthenticated: boolean
+  getProfile: () => Promise<Profile>
+  setProfile: (profileData: Partial<Profile>) => Promise<Profile | null>
+  login: (email: string, password: string) => Promise<{ success: boolean; message: string }>
+  logout: () => void
+  updateUser: (userData: Partial<User>) => void
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
+
 const API_BASE_URL = 'http://localhost:8080/api';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -105,6 +129,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user])
 
+  // 로그인 함수
+  // 이메일과 비밀번호를 받아서 로그인 처리
   const login = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {
     setIsLoading(true)
 
@@ -166,10 +192,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const getProfile = async () => {
+    if (!user) return null
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/getProfile/${user.user_id}`, {
+        credentials: "include",
+      })
+      if (!response.ok) {
+        throw new Error("사용자 정보를 불러오지 못했습니다.")
+      }
+      const profileData = await response.json()
+      return profileData
+    } catch (error) {
+      console.error("프로필 불러오기 오류:", error)
+      return null
+    }
+  }
+
+  const setProfile = async (profileData: Partial<User>) => {
+    if (!user) return
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/setProfile/${user.user_id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profileData),
+        credentials: "include",
+      })
+      if (!response.ok) {
+        throw new Error("프로필 업데이트에 실패했습니다.")
+      }
+      const updatedProfile = await response.json()
+      updateUser(updatedProfile)
+      return updatedProfile
+    } catch (error) {
+      console.error("프로필 업데이트 오류:", error)
+      return null
+    }
+
+  }
+
   const value: AuthContextType = {
     user,
     isLoading,
     isAuthenticated: !!user,
+    getProfile,
+    setProfile,
     login,
     logout,
     updateUser,
