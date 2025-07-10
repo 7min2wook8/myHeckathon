@@ -33,7 +33,7 @@ export default function SignupPage() {
 
   // 약관 동의 정보 확인
   useEffect(() => {
-    const savedAgreements = localStorage.getItem("signup_agreements")
+    const savedAgreements = sessionStorage.getItem("signup_agreements")
     if (!savedAgreements) {
       // 약관 동의를 하지 않은 경우 약관 페이지로 리다이렉트
       router.push("/signup/terms")

@@ -43,8 +43,8 @@ export default function SignupTermsPage() {
 
   const handleNext = () => {
     if (allRequiredAgreed) {
-      // 동의 정보를 localStorage에 저장
-      localStorage.setItem("signup_agreements", JSON.stringify(agreements))
+      // 동의 정보를 sessionStorage에 저장
+      sessionStorage.setItem("signup_agreements", JSON.stringify(agreements))
       router.push("/signup")
     }
   }
