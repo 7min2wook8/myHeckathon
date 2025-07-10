@@ -137,18 +137,18 @@ function MyPageContent() {
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
               <Avatar className="w-24 h-24">
-                <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.nickname} />
-                <AvatarFallback className="text-2xl">{user?.nickname?.[0] || ""}</AvatarFallback>
+                <AvatarImage src={/*user.avatar ||*/ "/placeholder.svg"} alt={user.username} />
+                <AvatarFallback className="text-2xl">{user?.username?.[0] || ""}</AvatarFallback>
               </Avatar>
 
               <div className="flex-1">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{user.nickname}님</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{user.username}님</h1>
                     <p className="text-gray-600 mb-2">{user.email}</p>
                     <div className="flex items-center text-sm text-gray-500">
                       <MapPin className="w-4 h-4 mr-1" />
-                      {user.location || "위치 미설정"}
+                      {/*user.location ||*/ "위치 미설정"}
                       <span className="mx-2">•</span>
                       <Calendar className="w-4 h-4 mr-1" />
                       가입일: 2024-01-15
@@ -179,21 +179,21 @@ function MyPageContent() {
                   <div>
                     <span className="text-sm font-medium text-gray-500">관심 분야</span>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {user.interests?.map((interest) => (
+                      {/*user.interests?.map((interest) => (
                         <Badge key={interest} variant="secondary">
                           {interest}
                         </Badge>
-                      )) || <span className="text-sm text-gray-400">관심 분야 미설정</span>}
+                      )) ||*/ <span className="text-sm text-gray-400">관심 분야 미설정</span>}
                     </div>
                   </div>
                   <div>
                     <span className="text-sm font-medium text-gray-500">기술 스택</span>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {user.skills?.map((skill) => (
+                      {/*user.skills?.map((skill) => (
                         <Badge key={skill} variant="outline">
                           {skill}
                         </Badge>
-                      )) || <span className="text-sm text-gray-400">기술 스택 미설정</span>}
+                      )) || */ <span className="text-sm text-gray-400">기술 스택 미설정</span>}
                     </div>
                   </div>
                 </div>

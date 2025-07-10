@@ -64,11 +64,11 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center space-x-2 p-2">
                     <Avatar className="w-8 h-8">
-                      <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.nickname} />
-                      <AvatarFallback>{user?.nickname?.[0] || ""}</AvatarFallback>
+                      <AvatarImage src={/*user.avatar || */ "/placeholder.svg"} alt={user.username} />
+                      <AvatarFallback>{user?.username?.[0] || ""}</AvatarFallback>
                     </Avatar>
                     {/* <span className="font-medium">{user.name}님</span> */}
-                    <span className="font-medium">{user?.nickname || "사용자"}님</span>
+                    <span className="font-medium">{user?.username || "사용자"}님</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
@@ -125,10 +125,10 @@ export default function Header() {
                   <>
                     <div className="flex items-center space-x-2 py-2">
                       <Avatar className="w-8 h-8">
-                          <AvatarImage src={user?.avatar || "/placeholder.svg"} alt={user?.nickname || "사용자"} />
-                          <AvatarFallback>{user?.nickname?.[0] || ""}</AvatarFallback>
+                          <AvatarImage src={/*user?.avatar || */"/placeholder.svg"} alt={user?.username || "사용자"} />
+                          <AvatarFallback>{user?.username?.[0] || ""}</AvatarFallback>
                       </Avatar>
-                      <span className="font-medium">{user?.nickname || "사용자"}님</span>
+                      <span className="font-medium">{user?.username || "사용자"}님</span>
                     </div>
                     <Link href="/mypage">
                       <Button variant="ghost" className="w-full justify-start">
