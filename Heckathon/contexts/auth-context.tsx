@@ -129,6 +129,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user])
 
+<<<<<<< Updated upstream
+=======
+  const signUp = async (email: string, password: string, username: string, phone: string): Promise<{ success: boolean; message: string }> => {
+    setIsLoading(true)
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, username, phone }),
+        credentials: "include", // 세션 쿠키를 받으려면 필요
+      })
+
+      if (response.ok) {
+        const msRes = await login(email, password)
+        if(!msRes.success){
+          return msRes
+        }
+        setIsLoading(false)
+        return { success: true, message: "회원가입에 성공했습니다." }
+      } else {
+        const msg = await response.text()
+        setIsLoading(false)
+        return { success: false, message: msg || "회원가입에 실패했습니다." }
+      }
+    } catch (error) {
+      setIsLoading(false)
+      return { success: false, message: "회원가입 중 오류가 발생했습니다." }
+    }
+  }
+  
+>>>>>>> Stashed changes
   // 로그인 함수
   // 이메일과 비밀번호를 받아서 로그인 처리
   const login = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {
