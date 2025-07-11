@@ -17,56 +17,45 @@ import ProtectedRoute from "@/components/protected-route"
 import { useAuth } from "@/contexts/auth-context"
 import Link from "next/link"
 
-// const availableInterests = [
-//   "창업",
-//   "IT",
-//   "디자인",
-//   "마케팅",
-//   "광고",
-//   "사회",
-//   "환경",
-//   "교육",
-//   "문화",
-//   "예술",
-//   "스포츠",
-//   "의료",
-//   "금융",
-//   "정책",
-// ]
+const availableInterests = [
+  "창업",
+  "IT",
+  "디자인",
+  "마케팅",
+  "광고",
+  "사회",
+  "환경",
+  "교육",
+  "문화",
+  "예술",
+  "스포츠",
+  "의료",
+  "금융",
+  "정책",
+]
 
-// const availableSkills = [
-//   "React",
-//   "Vue.js",
-//   "Angular",
-//   "Node.js",
-//   "Python",
-//   "Java",
-//   "JavaScript",
-//   "TypeScript",
-//   "UI/UX",
-//   "Figma",
-//   "Photoshop",
-//   "Illustrator",
-//   "Marketing",
-//   "SEO",
-//   "Data Analysis",
-//   "Machine Learning",
-// ]
-
-      /*
-        this.user_id = user_id;
-        this.full_name = full_name;
-        this.bio = bio;
-        this.profile_image_url = profile_image_url;
-        this.education = education;
-        this.experience = experience;
-        this.portfolio_url = portfolio_url;       
-        */
+const availableSkills = [
+  "React",
+  "Vue.js",
+  "Angular",
+  "Node.js",
+  "Python",
+  "Java",
+  "JavaScript",
+  "TypeScript",
+  "UI/UX",
+  "Figma",
+  "Photoshop",
+  "Illustrator",
+  "Marketing",
+  "SEO",
+  "Data Analysis",
+  "Machine Learning",
+]
 
 function ProfileEditContent() {
 
-  const { getProfile, isAuthenticated } = useAuth()
-  const { user, updateUser } = useAuth()
+  const { getProfile, isAuthenticated, user, updateUser } = useAuth()
   const [profile, setProfile] = useState({
     user_id : "",
     full_name: "",
@@ -74,17 +63,7 @@ function ProfileEditContent() {
     profile_image_url: "",
     education: "",
     experience: "",
-    portfolio_url: "",
-
-    // nickname: "",
-    // email: "",
-    // phone: "",
-    // location: "",
-
-    // interests: [] as string[],
-    // skills: [] as string[],
-    //portfolio: "",
-    //github: "",
+    portfolio_url: "",    
   })
   const [newInterest, setNewInterest] = useState("")
   const [newSkill, setNewSkill] = useState("")
@@ -95,18 +74,7 @@ function ProfileEditContent() {
   useEffect(() => {
     if (user) {
       setProfile({
-        //nickname: user.nickname || "",
-        //email: user.email || "",
-        //phone: "",
-        //location: user.location || "",
-        //bio: "",
-        //interests: user.interests || [],
-        //skills: user.skills || [],
-        //education: "",
-        //experience: "",
-        //portfolio: "",
-        //github: "",
-        user_id: user.user_id || "",
+        user_id: user.id || "",
         full_name: "",
         bio: "",
         profile_image_url: "",
@@ -114,15 +82,13 @@ function ProfileEditContent() {
         experience: "",
         portfolio_url : "",
       })
-<<<<<<< Updated upstream
-=======
 
       // getProfile()를 통해 프로필 데이터 가져오기
       getProfile()
         .then((profileData) => {
           if (profileData) {
             setProfile({
-              user_id: profileData.userId,
+              user_id: profileData.user_id,
               full_name: profileData.full_name || "",
               bio: profileData.bio || "",
               profile_image_url: profileData.profile_image_url || "",
@@ -135,54 +101,30 @@ function ProfileEditContent() {
         .catch((error) => {
           console.error("프로필 데이터를 가져오는 중 오류 발생:", error)
         })
->>>>>>> Stashed changes
     }
+
   }, [user])
 
+  // 프로필 저장 핸들러
+  // 이 함수는 실제 API 호출을 시뮬레이션합니다.
   const handleSave = async () => {
     setIsLoading(true)
     setSuccess(false)
 
+
     try {
-
-      // 실제 API 호출 시뮬레이션      
-      const result = await getProfile()      
-
-      if (result) {
-        setProfile(
-          {
-            user_id: result.user_id,
-            full_name: result.full_name || "",
-            bio: result.bio || "",
-            profile_image_url: result.profile_image_url || "",
-            education: result.education || "",
-            experience: result.experience || "",
-            portfolio_url: result.portfolio_url || "",
-          } as any // 타입 캐스팅
-        )
-      } else {
-        console.error("프로필 정보를 가져오는 데 실패했습니다.")
-        return
-      }
 
       // 실제 API 호출 시뮬레이션
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-<<<<<<< Updated upstream
-      // 프로필 업데이트
-      await updateUser(profile)
-      // setProfile(result) // API 호출 결과로 프로필 업데이트
-      console.log("프로필 업데이트 성공:", profile)
-=======
       // // 프로필 업데이트
-      // const result = await setProfile()
+      // const result = await setProfile(profile)
       // // setProfile(result) // API 호출 결과로 프로필 업데이트
       // if (!result) {
       //   console.error("프로필 업데이트에 실패했습니다.")
       //   return
       // }
       // console.log("프로필 업데이트 성공:", profile)
->>>>>>> Stashed changes
 
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)

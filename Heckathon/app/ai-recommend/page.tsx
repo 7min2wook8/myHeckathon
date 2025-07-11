@@ -79,7 +79,7 @@ function AIRecommendContent() {
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Equal:Local의 AI추천 서비스를 이용해보세요!
             <br />
-            {user.nickname}님에게 맞는 공모전을 찾아드립니다.
+            {user.username}님에게 맞는 공모전을 찾아드립니다.
           </p>
         </div>
 
@@ -88,7 +88,7 @@ function AIRecommendContent() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <User className="w-5 h-5 mr-2" />
-              {user.nickname}님의 프로필
+              {user.username}님의 프로필
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -96,17 +96,17 @@ function AIRecommendContent() {
               <div>
                 <h4 className="font-semibold mb-2">관심 분야</h4>
                 <div className="flex flex-wrap gap-2">
-                  {user.interests && user.interests.length > 0 ? (
+                  {/* {user.interests && user.interests.length > 0 ? (
                     user.interests.map((interest) => <Badge key={interest}>{interest}</Badge>)
                   ) : (
                     <span className="text-sm text-gray-500">관심 분야를 설정해주세요</span>
-                  )}
+                  )} */}
                 </div>
               </div>
               <div>
                 <h4 className="font-semibold mb-2">기술 스택</h4>
                 <div className="flex flex-wrap gap-2">
-                  {user.skills && user.skills.length > 0 ? (
+                  {/* {user.skills && user.skills.length > 0 ? (
                     user.skills.map((skill) => (
                       <Badge key={skill} variant="outline">
                         {skill}
@@ -114,7 +114,7 @@ function AIRecommendContent() {
                     ))
                   ) : (
                     <span className="text-sm text-gray-500">기술 스택을 설정해주세요</span>
-                  )}
+                  )} */}
                 </div>
               </div>
               <div>
@@ -123,7 +123,7 @@ function AIRecommendContent() {
               </div>
               <div>
                 <h4 className="font-semibold mb-2">선호 지역</h4>
-                <p className="text-sm text-gray-600">{user.location || "지역 미설정"}</p>
+                <p className="text-sm text-gray-600">{/*user.location || */"지역 미설정"}</p>
               </div>
             </div>
           </CardContent>
@@ -152,7 +152,7 @@ function AIRecommendContent() {
         {showRecommendations && (
           <div>
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">{user.nickname}님을 위한 맞춤 추천 공모전</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{user.username}님을 위한 맞춤 추천 공모전</h2>
               <Button variant="outline" onClick={handleGetRecommendations}>
                 <Sparkles className="w-4 h-4 mr-2" />
                 다시 추천받기

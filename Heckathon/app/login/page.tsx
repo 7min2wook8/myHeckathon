@@ -50,8 +50,7 @@ export default function LoginPage() {
         } else {
           setError(result.message)
         }
-
-       console.log("로그인 시도:", formData)
+       
     } catch (error) {
       setError("로그인 중 오류가 발생했습니다.")
     } finally {

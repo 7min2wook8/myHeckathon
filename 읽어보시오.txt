@@ -25,3 +25,8 @@ docker - pgadmin 접속 방법
 	- Username : user
 	- Password : a1234
 5. 접속
+
+
+docker-compose down -v 
+
+docker-compose up -d --build

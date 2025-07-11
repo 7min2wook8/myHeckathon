@@ -88,8 +88,7 @@ const regions = [
 ]
 
 export default function SignupProfilePage() {
-    
-  const { user, updateUser, updateProfile } = useAuth()
+  const { user, updateUser } = useAuth()
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
@@ -109,37 +108,27 @@ export default function SignupProfilePage() {
   const [newInterest, setNewInterest] = useState("")
   const [newSkill, setNewSkill] = useState("")
 
-
-
-
   const handleSave = async () => {
     setIsLoading(true)
     setSuccess(false)
 
     try {
-        // 실제 API 호출 시뮬레이션
-        await new Promise((resolve) => setTimeout(resolve, 1500))
+      // 실제 API 호출 시뮬레이션
+      await new Promise((resolve) => setTimeout(resolve, 1500))
         
-       const result = updateProfile(profile)
-        if(!result){
-            console.log("프로필 저장/수정 오류")
-            setSuccess(false)
-        }
-
-        //setProfile(profile)
       // 사용자 정보 업데이트
-    //   updateUser({
-    //     //location: profile.location,
-    //     //interests: profile.interests,
-    //     //skills: profile.skills,
-    //   })
-        console.log("프로필 저장/수정 완료")
-        setSuccess(true)
+      updateUser({
+        //location: profile.location,
+        //interests: profile.interests,
+        //skills: profile.skills,
+      })
 
-    //     // 2초 후 홈으로 이동
-    //     setTimeout(() => {
-    //     router.push("/")
-    //   }, 2000)
+      setSuccess(true)
+
+      // 2초 후 홈으로 이동
+      setTimeout(() => {
+        router.push("/")
+      }, 2000)
     } catch (error) {
       console.error("프로필 저장 오류:", error)
     } finally {
@@ -199,10 +188,6 @@ export default function SignupProfilePage() {
 
   if (!user) {
     console.log("사용자 정보가 없습니다.")
-        // 2초 후 홈으로 이동
-        setTimeout(() => {            
-        router.push("/")
-      }, 2000)
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="w-96">

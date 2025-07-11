@@ -15,15 +15,12 @@ import { ArrowLeft, User, Mail, Phone, Lock, CheckCircle, Loader2, Eye, EyeOff }
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import TermsModal from "@/components/terms-modal"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function SignupPage() {
-   const { user } = useAuth()
-
-    if (user) return null
-
   const router = useRouter()
   const [formData, setFormData] = useState({
-    nickname: "",
+    username: "",
     password: "",
     confirmPassword: "",
     email: "",
@@ -35,6 +32,8 @@ export default function SignupPage() {
   const [error, setError] = useState("")
   const [agreements, setAgreements] = useState<Record<string, boolean>>({})
 
+  const { signUp, isAuthenticated } = useAuth()
+  
   // 약관 동의 정보 확인
   useEffect(() => {
     const savedAgreements = sessionStorage.getItem("signup_agreements")
@@ -72,32 +71,13 @@ export default function SignupPage() {
 
       // 실제 API 호출 시뮬레이션
       await new Promise((resolve) => setTimeout(resolve, 2000))
-<<<<<<< Updated upstream
-
-          const response = await fetch("http://localhost:8080/api/users/signup", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: formData.email,
-              password: formData.password,
-              nickname: formData.nickname,
-              //phone: formData.phone,
-              // 추가 필드가 필요하면 여기에 추가
-            }),
-            credentials: "include", // 세션 쿠키를 받으려면 필요
-          })
-          
-      if (!response.ok) {
-        const errorData = await response.json()
-        setError(errorData.message || "회원가입에 실패했습니다. 다시 시도해주세요.")
-        return
-=======
       // 회원가입 API 호출
-      // 로그인도 같이 실행함
+
       const response = await signUp(formData.email, formData.password, formData.username, formData.phone)
 
-      if (response.success) {
 
+      if (response.success) {
+        // 회원가입 성공 후 사용자 정보 저장
         // 성공 시 프로필 페이지로 이동
         sessionStorage.removeItem("signup_agreements") // 임시 저장된 약관 동의 정보 삭제
         router.push("/signup/profile")
@@ -105,13 +85,9 @@ export default function SignupPage() {
       else {
         // 회원가입 실패
         setError(response.message || "회원가입에 실패했습니다. 다시 시도해주세요.")
->>>>>>> Stashed changes
       }
 
-      // 회원가입 성공 후 사용자 정보 저장
-      // 성공 시 완료 페이지로 이동
-      localStorage.removeItem("signup_agreements") // 임시 저장된 약관 동의 정보 삭제
-      router.push("/signup/complete")
+      
     } catch (error) {
       setError("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.")
     } finally {
@@ -228,8 +204,8 @@ export default function SignupPage() {
                       <Input
                         id="nickname"
                         type="text"
-                        value={formData.nickname}
-                        onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
+                        value={formData.username}
+                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                         placeholder="영문, 숫자 조합 4-20자"
                         required
                         disabled={isLoading}
