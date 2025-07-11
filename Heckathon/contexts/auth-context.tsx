@@ -39,6 +39,7 @@ interface User {
 }
 
 interface Profile {
+<<<<<<< Updated upstream
 
     user_id : ""
     full_name?: ""
@@ -55,6 +56,25 @@ interface Profile {
   // location?: string
   // interests?: string[]
   // skills?: string[]
+=======
+  
+  userId: string;
+  full_name: string;
+  bio: string;
+  profile_image_url: string;
+  education: string;
+  experience: string;
+  portfolio_url: string;
+  // bio: string;
+  // location: string;
+  // interests: string[];
+  // skills: string[];
+  // education: string;
+  // experience: string;
+  // portfolio: string;
+  // github: string;
+  
+>>>>>>> Stashed changes
 }
 
 interface AuthContextType {
@@ -62,7 +82,12 @@ interface AuthContextType {
   isLoading: boolean
   isAuthenticated: boolean
   getProfile: () => Promise<Profile>
+<<<<<<< Updated upstream
   setProfile: (profileData: Partial<Profile>) => Promise<Profile | null>
+=======
+  updateProfile: (profileData: Partial<Profile>) => Promise<{ success: boolean; message?: string } | null>
+  signUp: (email: string, password: string, username: string, phone: string) => Promise<{ success: boolean; message: string }>
+>>>>>>> Stashed changes
   login: (email: string, password: string) => Promise<{ success: boolean; message: string }>
   logout: () => void
   updateUser: (userData: Partial<User>) => void
@@ -164,9 +189,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // 이메일과 비밀번호를 받아서 로그인 처리
   const login = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {
     setIsLoading(true)
+<<<<<<< Updated upstream
 
     // 실제 API 호출 시뮬레이션
     //await new Promise((resolve) => setTimeout(resolve, 1000))
+=======
+        
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+>>>>>>> Stashed changes
 
     try {
       //const foundUser = DUMMY_USERS.find((u) => u.email === email && u.password === password)
@@ -179,7 +209,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       //const data = await response.json()
 
       if (response.ok) {
-        // 로그인 성공 시 사용자 정보 받아오기 (예: /users/me)
+        //로그인 성공 시 사용자 정보 받아오기 (예: /users/me)
         const meRes = await fetch(`${API_BASE_URL}/users/me`, {
           credentials: "include",
         })
@@ -188,6 +218,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return { success: false, message: "사용자 정보를 불러오지 못했습니다." }
         }
         const userData = await meRes.json()
+
+        // const userData = getUser()
+        // if (userData === null) {
+        //   return { success: false, message: "사용자 정보를 불러오지 못했습니다." }
+        // }
+
         const sessionExpiry = Date.now() + 24 * 60 * 60 * 1000 // 24시간
 
         // 로컬 스토리지에 사용자 정보와 세션 만료 시간 저장
@@ -209,6 +245,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+<<<<<<< Updated upstream
+=======
+
+  // 사용자 정보를 호출하는 함수(임시)
+  // const getUser = async (): Promise< any | null> => {
+    
+  //   try {
+  //     const meRes = await fetch(`${API_BASE_URL}/users/me`, {
+  //         credentials: "include",
+  //       })
+
+  //       if (!meRes.ok) {
+  //         setIsLoading(false)
+  //         return null 
+  //       }
+
+  //     const userData = await meRes.json()
+
+  //     return userData
+
+  //   } catch (error) {
+  //     console.error("사용자 정보 불러오기 오류:", error)
+  //     return null
+  //   }
+  // }
+
+
+>>>>>>> Stashed changes
   const logout = () => {
     setUser(null)
     localStorage.removeItem("EqualLocal_user")
@@ -241,12 +305,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+<<<<<<< Updated upstream
   const setProfile = async (profileData: Partial<User>) => {
     if (!user) return
 
     try {
       const response = await fetch(`${API_BASE_URL}/users/setProfile/${user.user_id}`, {
         method: "PUT",
+=======
+  const updateProfile = async (profileData: Partial<Profile>): Promise<{ success: boolean; message?: string } | null> => {
+    if (!user) return null
+    console.log(profileData)
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/updateProfile`, {
+        method: "POST",
+        body: JSON.stringify({profileData}),
+>>>>>>> Stashed changes
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profileData),
         credentials: "include",
@@ -269,7 +343,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoading,
     isAuthenticated: !!user,
     getProfile,
-    setProfile,
+    updateProfile,
     login,
     logout,
     updateUser,

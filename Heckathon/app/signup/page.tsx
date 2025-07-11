@@ -17,6 +17,10 @@ import Footer from "@/components/footer"
 import TermsModal from "@/components/terms-modal"
 
 export default function SignupPage() {
+   const { user } = useAuth()
+
+    if (user) return null
+
   const router = useRouter()
   const [formData, setFormData] = useState({
     nickname: "",

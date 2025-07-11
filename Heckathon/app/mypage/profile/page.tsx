@@ -114,6 +114,28 @@ function ProfileEditContent() {
         experience: "",
         portfolio_url : "",
       })
+<<<<<<< Updated upstream
+=======
+
+      // getProfile()를 통해 프로필 데이터 가져오기
+      getProfile()
+        .then((profileData) => {
+          if (profileData) {
+            setProfile({
+              user_id: profileData.userId,
+              full_name: profileData.full_name || "",
+              bio: profileData.bio || "",
+              profile_image_url: profileData.profile_image_url || "",
+              education: profileData.education || "",
+              experience: profileData.experience || "",
+              portfolio_url: profileData.portfolio_url || "",
+            })
+          }
+        })
+        .catch((error) => {
+          console.error("프로필 데이터를 가져오는 중 오류 발생:", error)
+        })
+>>>>>>> Stashed changes
     }
   }, [user])
 
@@ -146,10 +168,21 @@ function ProfileEditContent() {
       // 실제 API 호출 시뮬레이션
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
+<<<<<<< Updated upstream
       // 프로필 업데이트
       await updateUser(profile)
       // setProfile(result) // API 호출 결과로 프로필 업데이트
       console.log("프로필 업데이트 성공:", profile)
+=======
+      // // 프로필 업데이트
+      // const result = await setProfile()
+      // // setProfile(result) // API 호출 결과로 프로필 업데이트
+      // if (!result) {
+      //   console.error("프로필 업데이트에 실패했습니다.")
+      //   return
+      // }
+      // console.log("프로필 업데이트 성공:", profile)
+>>>>>>> Stashed changes
 
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
