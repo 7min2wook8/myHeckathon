@@ -63,6 +63,7 @@ interface AuthContextType {
   isAuthenticated: boolean
   getProfile: () => Promise<Profile>
   setProfile: (profileData: Partial<Profile>) => Promise<{ success: boolean; message?: string } | null>
+  signUp: (email: string, password: string, username: string, phone: string) => Promise<{ success: boolean; message: string }>
   login: (email: string, password: string) => Promise<{ success: boolean; message: string }>
   logout: () => void
   updateUser: (userData: Partial<User>) => void
@@ -129,16 +130,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user])
 
+  const signUp = async (email: string, password: string, username: string, phone: string): Promise<{ success: boolean; message: string }> => {
+    setIsLoading(true)
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, username, phone }),
+        credentials: "include", // 세션 쿠키를 받으려면 필요
+      })
+
+      if (response.ok) {
+        //const userData = await response.json()
+        console.log("회원가입 성공:")
+        setIsLoading(false)
+
+        return { success: true, message: "회원가입에 성공했습니다." }
+      } else {
+        const msg = await response.text()
+        setIsLoading(false)
+        return { success: false, message: msg || "회원가입에 실패했습니다." }
+      }
+    } catch (error) {
+      setIsLoading(false)
+      return { success: false, message: "회원가입 중 오류가 발생했습니다." }
+    }
+  }
+  
   // 로그인 함수
   // 이메일과 비밀번호를 받아서 로그인 처리
   const login = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {
     setIsLoading(true)
 
-    // 실제 API 호출 시뮬레이션
-    //await new Promise((resolve) => setTimeout(resolve, 1000))
+    
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     try {
-      //const foundUser = DUMMY_USERS.find((u) => u.email === email && u.password === password)
+      // 로그인 확인
       const response = await fetch(`${API_BASE_URL}/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -156,9 +184,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return { success: false, message: "사용자 정보를 불러오지 못했습니다." }
         }
         const userData = await meRes.json()
-        console.log("로그인 성공2:", userData)
-
-        
         const sessionExpiry = Date.now() + 24 * 60 * 60 * 1000 // 24시간
 
         // 로컬 스토리지에 사용자 정보와 세션 만료 시간 저장
@@ -196,7 +221,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const getProfile = async () => {
     if (!user) return null
-    console.log("getProfile 호출됨, user:", user.id)
+    //console.log("getProfile 호출됨, user:", user.id)
     try {
       const response = await fetch(`${API_BASE_URL}/users/getProfile`, {
         method: "POST",
@@ -243,6 +268,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     isLoading,
     isAuthenticated: !!user,
+    signUp,
     getProfile,
     setProfile,
     login,
