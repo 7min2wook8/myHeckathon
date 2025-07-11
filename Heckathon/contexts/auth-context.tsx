@@ -28,7 +28,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 
 
 interface User {
-  user_id: string
+  id: string
   username: string
   email: string
   phone_number?: string
@@ -62,7 +62,7 @@ interface AuthContextType {
   isLoading: boolean
   isAuthenticated: boolean
   getProfile: () => Promise<Profile>
-  setProfile: (profileData: Partial<Profile>) => Promise<Profile | null>
+  setProfile: (profileData: Partial<Profile>) => Promise<{ success: boolean; message?: string } | null>
   login: (email: string, password: string) => Promise<{ success: boolean; message: string }>
   logout: () => void
   updateUser: (userData: Partial<User>) => void
@@ -145,8 +145,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({ email, password }),
         credentials: "include", // 세션 쿠키를 받으려면 필요
       })
-      //const data = await response.json()
-
+      
       if (response.ok) {
         // 로그인 성공 시 사용자 정보 받아오기 (예: /users/me)
         const meRes = await fetch(`${API_BASE_URL}/users/me`, {
@@ -157,6 +156,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return { success: false, message: "사용자 정보를 불러오지 못했습니다." }
         }
         const userData = await meRes.json()
+        console.log("로그인 성공2:", userData)
+
+        
         const sessionExpiry = Date.now() + 24 * 60 * 60 * 1000 // 24시간
 
         // 로컬 스토리지에 사용자 정보와 세션 만료 시간 저장
@@ -194,13 +196,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const getProfile = async () => {
     if (!user) return null
-
+    console.log("getProfile 호출됨, user:", user.id)
     try {
-      const response = await fetch(`${API_BASE_URL}/users/getProfile/${user.user_id}`, {
+      const response = await fetch(`${API_BASE_URL}/users/getProfile`, {
+        method: "POST",
+        body: JSON.stringify({ userid : user.id }),
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
+
       })
+
       if (!response.ok) {
-        throw new Error("사용자 정보를 불러오지 못했습니다.")
+        throw new Error("사용자 정보를 불러오지 못했습니다.")        
       }
       const profileData = await response.json()
       return profileData
@@ -210,27 +217,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const setProfile = async (profileData: Partial<User>) => {
-    if (!user) return
+  const setProfile = async (profileData: Partial<Profile>): Promise<{ success: boolean; message?: string } | null> => {
+    if (!user) return null
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/setProfile/${user.user_id}`, {
-        method: "PUT",
+      const response = await fetch(`${API_BASE_URL}/users/setProfile`, {
+        method: "POST",
+        body: JSON.stringify({ user_id: user.id, ...profileData }),
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profileData),
-        credentials: "include",
+        credentials: "include",        
       })
       if (!response.ok) {
-        throw new Error("프로필 업데이트에 실패했습니다.")
+        const msg = await response.text()
+        return { success: false, message: msg || "프로필 업데이트에 실패했습니다." }
       }
-      const updatedProfile = await response.json()
-      updateUser(updatedProfile)
-      return updatedProfile
+      // Optionally update user state here if needed
+      return { success: true, message: "프로필이 성공적으로 업데이트되었습니다." }
     } catch (error) {
       console.error("프로필 업데이트 오류:", error)
-      return null
+      return { success: false, message: "프로필 업데이트 중 오류가 발생했습니다." }
     }
-
   }
 
   const value: AuthContextType = {

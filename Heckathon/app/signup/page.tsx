@@ -19,7 +19,7 @@ import TermsModal from "@/components/terms-modal"
 export default function SignupPage() {
   const router = useRouter()
   const [formData, setFormData] = useState({
-    nickname: "",
+    username: "",
     password: "",
     confirmPassword: "",
     email: "",
@@ -75,7 +75,7 @@ export default function SignupPage() {
             body: JSON.stringify({
               email: formData.email,
               password: formData.password,
-              nickname: formData.nickname,
+              nickname: formData.username,
               //phone: formData.phone,
               // 추가 필드가 필요하면 여기에 추가
             }),
@@ -208,8 +208,8 @@ export default function SignupPage() {
                       <Input
                         id="nickname"
                         type="text"
-                        value={formData.nickname}
-                        onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
+                        value={formData.username}
+                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                         placeholder="영문, 숫자 조합 4-20자"
                         required
                         disabled={isLoading}

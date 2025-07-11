@@ -432,11 +432,11 @@ function TeamCreateContent() {
                 <CardContent>
                   <div className="text-center">
                     <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <span className="text-blue-600 font-bold text-xl">{user?.nickname?.[0] || ""}</span>
+                      <span className="text-blue-600 font-bold text-xl">{user?.username?.[0] || ""}</span>
                     </div>
-                    <h3 className="font-medium">{user.nickname}</h3>
+                    <h3 className="font-medium">{user.username}</h3>
                     <p className="text-sm text-gray-600">{user.email}</p>
-                    <p className="text-sm text-gray-600 mt-1">{user.location || "위치 미설정"}</p>
+                    <p className="text-sm text-gray-600 mt-1">{/*user.location || */"위치 미설정"}</p>
                   </div>
                 </CardContent>
               </Card>
