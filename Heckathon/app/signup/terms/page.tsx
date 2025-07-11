@@ -11,8 +11,13 @@ import { ArrowLeft, FileText, Shield, CheckCircle, AlertCircle } from "lucide-re
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import Link from "next/link"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function SignupTermsPage() {
+   const { user } = useAuth()
+  
+      if (user) return null
+      
   const router = useRouter()
   const [agreements, setAgreements] = useState({
     terms1: false,

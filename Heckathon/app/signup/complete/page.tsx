@@ -7,8 +7,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle, Sparkles, Users, Trophy, ArrowRight } from "lucide-react"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function SignupCompletePage() {
+
+  const { user } = useAuth()
+
+    if (!user) return null
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
