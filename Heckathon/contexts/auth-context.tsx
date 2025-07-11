@@ -2,40 +2,11 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 
-// 더미 사용자 데이터
-// const DUMMY_USERS = [
-//   {
-//     id: "1",
-//     name: "민욱",
-//     email: "minwook@example.com",
-//     password: "password123",
-//     avatar: "/placeholder.svg?height=100&width=100",
-//     location: "서울",
-//     interests: ["창업", "IT", "디자인"],
-//     skills: ["React", "Node.js", "Python", "UI/UX"],
-//   },
-//   {
-//     id: "2",
-//     name: "김철수",
-//     email: "chulsoo@example.com",
-//     password: "password123",
-//     avatar: "/placeholder.svg?height=100&width=100",
-//     location: "부산",
-//     interests: ["IT", "마케팅"],
-//     skills: ["Java", "Spring", "MySQL"],
-//   },
-// ]
-
-
 interface User {
   id: string
   username: string
   email: string
-  phone_number?: string
-  //avatar?: string
-  //location?: string
-  //interests?: string[]
-  //skills?: string[]
+  phone_number?: string 
 }
 
 interface Profile {
@@ -47,14 +18,6 @@ interface Profile {
     education?: ""
     experience?: ""
     portfolio_url?: ""
-  // user_id: string
-  // username: string
-  // email: string
-  // phone_number?: string
-  // avatar?: string
-  // location?: string
-  // interests?: string[]
-  // skills?: string[]
 }
 
 interface AuthContextType {
@@ -141,8 +104,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
 
       if (response.ok) {
-        //const userData = await response.json()
+
         console.log("회원가입 성공:")
+
+        const msRes = await login(email, password)
+        if(!msRes.success){
+          return msRes
+        }else
+        {
+           console.log("자동 로그인 실행")
+        }
+
         setIsLoading(false)
 
         return { success: true, message: "회원가입에 성공했습니다." }
@@ -179,6 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const meRes = await fetch(`${API_BASE_URL}/users/me`, {
           credentials: "include",
         })
+
         if (!meRes.ok) {
           setIsLoading(false)
           return { success: false, message: "사용자 정보를 불러오지 못했습니다." }
@@ -190,7 +163,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem("EqualLocal_user", JSON.stringify(userData))
         localStorage.setItem("EqualLocal_session_expiry", sessionExpiry.toString())
 
-        setUser(userData)
+        setUser(await userData)
         setIsLoading(false)
 
         return { success: true, message: "로그인에 성공했습니다." }
@@ -204,6 +177,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: false, message: "로그인 중 오류가 발생했습니다." }
     }
   }
+
+
+  // 사용자 정보를 호출하는 함수
+  const getUser = async (): Promise<User | null> => {
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/me`, {
+        credentials: "include",
+      })
+
+      if (!response.ok) {
+        throw new Error("사용자 정보를 불러오지 못했습니다.")
+      }
+      const userData = await response.json()
+      return userData
+    } catch (error) {
+      console.error("사용자 정보 불러오기 오류:", error)
+      return null
+    }
+  }
+
 
   const logout = () => {
     setUser(null)
